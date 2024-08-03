@@ -4,8 +4,7 @@ import { useParams } from 'react-router-dom';
 
 function EventView() {
     const params = useParams();
-    const [eventDetails, setEventDetails] = useState({});
-    const [registeredUsers, setRegisteredUsers] = useState([]);
+    const [eventDetails, setEventDetails] = useState(null);
     const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -14,19 +13,16 @@ function EventView() {
 
     const getEventDetails = async () => {
         try {
-            // Fetch event details
-            const eventResponse = await axios.get(`https://66abc8ddf009b9d5c730532d.mockapi.io/events/${params.id}`);
-            setEventDetails(eventResponse.data);
+            const response = await axios.get(`https://66abc8ddf009b9d5c730532d.mockapi.io/events/${params.id}`);
+            const data = response.data;
 
-            // Fetch registered users if present
-            if (eventResponse.data.registeredusers) {
-                const userRequests = eventResponse.data.registeredusers.map(userId =>
-                    axios.get(`https://63a9bccb7d7edb3ae616b639.mockapi.io/users/${userId}`)
-                );
-                const userResponses = await Promise.all(userRequests);
-                setRegisteredUsers(userResponses.map(response => response.data));
-            }
+            // Convert endDate from Unix timestamp to a readable format
+            const endDate = new Date(data.endDate * 1000).toLocaleDateString();
 
+            setEventDetails({
+                ...data,
+                endDate,
+            });
             setLoading(false);
         } catch (error) {
             console.log(error);
@@ -45,76 +41,53 @@ function EventView() {
                     {isLoading ? (
                         <img src='https://media.giphy.com/media/ZO9b1ntYVJmjZlsWlm/giphy.gif' alt="Loading..." />
                     ) : (
-                        <>
+                        eventDetails && (
                             <div className="table-responsive">
                                 <table className="table table-bordered" width="100%" cellSpacing="0">
                                     <thead>
                                         <tr>
                                             <th>Id</th>
                                             <th>Event Name</th>
-                                            <th>Organizers</th>
+                                            <th>Description</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Timings</th>
+                                            <th>Days</th>
                                             <th>Venue</th>
-                                            <th>Date</th>
-                                            <th>Registered Users Count</th>
+                                            <th>Picture</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
                                             <th>Id</th>
                                             <th>Event Name</th>
-                                            <th>Organizers</th>
+                                            <th>Description</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Timings</th>
+                                            <th>Days</th>
                                             <th>Venue</th>
-                                            <th>Date</th>
-                                            <th>Registered Users Count</th>
+                                            <th>Picture</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
                                         <tr>
                                             <td>{eventDetails.id}</td>
-                                            <td>{eventDetails.eventname}</td>
-                                            <td>{eventDetails.organizers}</td>
+                                            <td>{eventDetails.eventName}</td>
+                                            <td>{eventDetails.description}</td>
+                                            <td>{eventDetails.startDate}</td>
+                                            <td>{eventDetails.endDate}</td>
+                                            <td>{eventDetails.timings}</td>
+                                            <td>{eventDetails.days}</td>
                                             <td>{eventDetails.venue}</td>
-                                            <td>{eventDetails.date}</td>
-                                            <td>{eventDetails.registeredusers?.length || 0}</td>
+                                            <td>
+                                                <img src={eventDetails.picture} alt="Event" style={{ maxWidth: '100px' }} />
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div className="table-responsive mt-4">
-                                <h6 className="m-0 font-weight-bold text-primary">Registered Users</h6>
-                                <table className="table table-bordered" width="100%" cellSpacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>User Id</th>
-                                            <th>Username</th>
-                                            <th>Email</th>
-                                            <th>City</th>
-                                            <th>State</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>User Id</th>
-                                            <th>Username</th>
-                                            <th>Email</th>
-                                            <th>City</th>
-                                            <th>State</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        {registeredUsers.map(user => (
-                                            <tr key={user.id}>
-                                                <td>{user.id}</td>
-                                                <td>{user.username}</td>
-                                                <td>{user.email}</td>
-                                                <td>{user.city}</td>
-                                                <td>{user.state}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </>
+                        )
                     )}
                 </div>
             </div>

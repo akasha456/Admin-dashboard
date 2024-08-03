@@ -9,40 +9,61 @@ function UserCreate() {
 
   const myFormik = useFormik({
     initialValues: {
-      eventname: "",
-      organizers: "",
+      eventName: "",
+      description: "",
+      startDate: "",
+      endDate: "",
+      timings: "",
+      days: "",
       venue: "",
-      date: "",
-      registeredusers: ""
+      picture: ""
     },
     validate: (values) => {
       let errors = {};
 
-      if (!values.eventname) {
-        errors.eventname = "Event name is required";
+      if (!values.eventName) {
+        errors.eventName = "Event name is required";
+      } else if (values.eventName.length < 3) {
+        errors.eventName = "Event name should be at least 3 characters long";
+      } else if (values.eventName.length > 50) {
+        errors.eventName = "Event name shouldn't be more than 50 characters";
       }
 
-      if (!values.organizers) {
-        errors.organizers = "Please enter organizers";
+      if (!values.description) {
+        errors.description = "Event description is required";
+      }
+
+      if (!values.startDate) {
+        errors.startDate = "Please select a start date";
+      }
+
+      if (!values.endDate) {
+        errors.endDate = "Please select an end date";
       }
 
       if (!values.venue) {
-        errors.venue = "Please select a city";
+        errors.venue = "Please enter the venue";
       }
 
-      if (!values.date) {
-        errors.date = "Please select a date";
+      if (!values.timings) {
+        errors.timings = "Please enter the timings";
       }
 
-      if (!values.registeredusers) {
-        errors.registeredusers = "Please select the number of registered users";
+      if (!values.days) {
+        errors.days = "Please enter the days";
+      }
+
+      if (!values.picture) {
+        errors.picture = "Please provide a picture URL";
+      } else if (!/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/i.test(values.picture)) {
+        errors.picture = "Please provide a valid image URL";
       }
 
       return errors;
     },
     onSubmit: async (values) => {
       try {
-        setLoading(true);
+        setLoading(true);       
         await axios.post("https://66abc8ddf009b9d5c730532d.mockapi.io/events", values);
         navigate("/portal/user-list2");
       } catch (error) {
@@ -60,74 +81,97 @@ function UserCreate() {
           <div className="col-lg-6">
             <label>Event Name</label>
             <input 
-              name='eventname' 
-              value={myFormik.values.eventname} 
+              name='eventName' 
+              value={myFormik.values.eventName} 
               onChange={myFormik.handleChange} 
               type={"text"}
-              className={`form-control ${myFormik.errors.eventname ? "is-invalid" : ""}`} 
+              className={`form-control ${myFormik.errors.eventName ? "is-invalid" : ""} `}
             />
-            <span style={{ color: "red" }}>{myFormik.errors.eventname}</span>
+            <span style={{ color: "red" }}>{myFormik.errors.eventName}</span>
           </div>
 
           <div className="col-lg-6">
-            <label>Organizers</label>
+            <label>Description</label>
             <input 
-              name='organizers' 
-              value={myFormik.values.organizers} 
+              name='description' 
+              value={myFormik.values.description} 
               onChange={myFormik.handleChange} 
               type={"text"}
-              className={`form-control ${myFormik.errors.organizers ? "is-invalid" : ""}`} 
+              className={`form-control ${myFormik.errors.description ? "is-invalid" : ""} `}
             />
-            <span style={{ color: "red" }}>{myFormik.errors.organizers}</span>
+            <span style={{ color: "red" }}>{myFormik.errors.description}</span>
+          </div>
+
+          <div className='col-lg-4'>
+            <label>Start Date</label>
+            <input
+              name='startDate'
+              type='date'
+              value={myFormik.values.startDate}
+              onChange={myFormik.handleChange}
+              className={`form-control ${myFormik.errors.startDate ? "is-invalid" : ""}`}
+            />
+            <span style={{ color: "red" }}>{myFormik.errors.startDate}</span>
+          </div>
+
+          <div className='col-lg-4'>
+            <label>End Date</label>
+            <input
+              name='endDate'
+              type='date'
+              value={myFormik.values.endDate}
+              onChange={myFormik.handleChange}
+              className={`form-control ${myFormik.errors.endDate ? "is-invalid" : ""}`}
+            />
+            <span style={{ color: "red" }}>{myFormik.errors.endDate}</span>
+          </div>
+
+          <div className='col-lg-4'>
+            <label>Timings</label>
+            <input 
+              name='timings' 
+              value={myFormik.values.timings} 
+              onChange={myFormik.handleChange}
+              type={"text"}
+              className={`form-control ${myFormik.errors.timings ? "is-invalid" : ""} `}
+            />
+            <span style={{ color: "red" }}>{myFormik.errors.timings}</span>
+          </div>
+
+          <div className='col-lg-4'>
+            <label>Days</label>
+            <input 
+              name='days' 
+              value={myFormik.values.days} 
+              onChange={myFormik.handleChange}
+              type={"text"}
+              className={`form-control ${myFormik.errors.days ? "is-invalid" : ""} `}
+            />
+            <span style={{ color: "red" }}>{myFormik.errors.days}</span>
           </div>
 
           <div className='col-lg-4'>
             <label>Venue</label>
-            <select 
+            <input 
               name='venue' 
               value={myFormik.values.venue} 
               onChange={myFormik.handleChange}
-              className={`form-control ${myFormik.errors.venue ? "is-invalid" : ""}`} 
-            >
-              <option value="">----Select----</option>
-              <option value="CN">Chennai</option>
-              <option value="KN">Kochin</option>
-              <option value="MU">Mumbai</option>
-              <option value="SA">Seattle</option>
-              <option value="MI">Miami</option>
-              <option value="VB">Virginia Beach</option>
-            </select>
+              type={"text"}
+              className={`form-control ${myFormik.errors.venue ? "is-invalid" : ""} `}
+            />
             <span style={{ color: "red" }}>{myFormik.errors.venue}</span>
           </div>
 
           <div className='col-lg-4'>
-            <label>Date</label>
-            <input
-              name='date'
-              type='date'
-              value={myFormik.values.date}
+            <label>Picture URL</label>
+            <input 
+              name='picture' 
+              value={myFormik.values.picture} 
               onChange={myFormik.handleChange}
-              className={`form-control ${myFormik.errors.date ? "is-invalid" : ""}`}
+              type={"text"}
+              className={`form-control ${myFormik.errors.picture ? "is-invalid" : ""} `}
             />
-            <span style={{ color: "red" }}>{myFormik.errors.date}</span>
-          </div>
-
-          <div className='col-lg-4'>
-            <label>Registered Users</label>
-            <select 
-              name='registeredusers' 
-              value={myFormik.values.registeredusers} 
-              onChange={myFormik.handleChange}
-              className={`form-control ${myFormik.errors.registeredusers ? "is-invalid" : ""}`} 
-            >
-              <option value="">----Select----</option>
-              <option value="0-100">0-100</option>
-              <option value="101-500">101-500</option>
-              <option value="501-1000">501-1000</option>
-              <option value="1001-5000">1001-5000</option>
-              <option value="5001+">5001+</option>
-            </select>
-            <span style={{ color: "red" }}>{myFormik.errors.registeredusers}</span>
+            <span style={{ color: "red" }}>{myFormik.errors.picture}</span>
           </div>
 
           <div className='col-lg-4 mt-3'>

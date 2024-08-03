@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 function EventList() {
-
   const [eventList, setEventList] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
@@ -26,7 +25,7 @@ function EventList() {
 
   const handleDelete = async (id) => {
     try {
-      const confirmDelete = window.confirm("Are you sure you want to delete the event?");
+      const confirmDelete = window.confirm("Are you sure you want to delete this event?");
       if (confirmDelete) {
         await axios.delete(`https://66abc8ddf009b9d5c730532d.mockapi.io/events/${id}`);
         getEvents();
@@ -60,10 +59,12 @@ function EventList() {
                   <tr>
                     <th>Id</th>
                     <th>Event Name</th>
-                    <th>Organizers</th>
+                    <th>Description</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Timings</th>
                     <th>Venue</th>
-                    <th>Date</th>
-                    <th>Registered Users</th>
+                    <th>Picture</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -71,10 +72,12 @@ function EventList() {
                   <tr>
                     <th>Id</th>
                     <th>Event Name</th>
-                    <th>Organizers</th>
+                    <th>Description</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Timings</th>
                     <th>Venue</th>
-                    <th>Date</th>
-                    <th>Registered Users</th>
+                    <th>Picture</th>
                     <th>Action</th>
                   </tr>
                 </tfoot>
@@ -82,11 +85,13 @@ function EventList() {
                   {eventList.map((event) => (
                     <tr key={event.id}>
                       <td>{event.id}</td>
-                      <td>{event.eventname}</td>
-                      <td>{event.organizers}</td>
+                      <td>{event.eventName}</td>
+                      <td>{event.description}</td>
+                      <td>{event.startDate}</td>
+                      <td>{event.endDate}</td>
+                      <td>{event.timings}</td>
                       <td>{event.venue}</td>
-                      <td>{event.date}</td>
-                      <td>{event.registeredusers}</td>
+                      <td>{event.picture}</td>
                       <td>
                         <Link to={`/portal/event-view/${event.id}`} className='btn btn-primary btn-sm mr-1'>View</Link>
                         <Link to={`/portal/event-edit2/${event.id}`} className='btn btn-info btn-sm mr-1'>Edit</Link>

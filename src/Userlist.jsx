@@ -15,7 +15,7 @@ function Userlist() {
 
   const getUsers = async () => {
     try {
-      const users = await axios.get("https://63a9bccb7d7edb3ae616b639.mockapi.io/users");
+      const users = await axios.get("https://66abc8ddf009b9d5c730532d.mockapi.io/userlist"); // Update to your backend URL
       setUserList(users.data);
       setLoading(false);
     } catch (error) {
@@ -27,7 +27,7 @@ function Userlist() {
     try {
       const confirmDelete = window.confirm("Are you sure you want to delete this user?");
       if (confirmDelete) {
-        await axios.delete(`https://63a9bccb7d7edb3ae616b639.mockapi.io/users/${id}`);
+        await axios.delete(`https://66abc8ddf009b9d5c730532d.mockapi.io/userlist/${id}`); // Update to your backend URL
         getUsers();
       }
     } catch (error) {
@@ -57,22 +57,20 @@ function Userlist() {
                   <thead>
                     <tr>
                       <th>Id</th>
-                      <th>Name</th>
+                      <th>Username</th>
                       <th>Email</th>
-                      <th>City</th>
-                      <th>State</th>
-                      <th>Country</th>
+                      <th>Phone Number</th>
+                      <th>Address</th>
                       <th>Action</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
                       <th>Id</th>
-                      <th>Name</th>
+                      <th>Username</th>
                       <th>Email</th>
-                      <th>City</th>
-                      <th>State</th>
-                      <th>Country</th>
+                      <th>Phone Number</th>
+                      <th>Address</th>
                       <th>Action</th>
                     </tr>
                   </tfoot>
@@ -80,11 +78,10 @@ function Userlist() {
                     {userList.map((user) => (
                       <tr key={user.id}>
                         <td>{user.id}</td>
-                        <td>{user.username}</td>
+                        <td>{user.userName}</td>
                         <td>{user.email}</td>
-                        <td>{user.city}</td>
-                        <td>{user.state}</td>
-                        <td>{user.country}</td>
+                        <td>{user.phoneNumber}</td>
+                        <td>{user.address}</td>
                         <td>
                           <Link to={`/portal/user-view/${user.id}`} className='btn btn-primary btn-sm mr-1'>View</Link>
                           <Link to={`/portal/user-edit/${user.id}`} className='btn btn-info btn-sm mr-1'>Edit</Link>

@@ -13,7 +13,7 @@ function UserView() {
 
     const getUser = async () => {
         try {
-            const response = await axios.get(`https://63a9bccb7d7edb3ae616b639.mockapi.io/users/${params.id}`);
+            const response = await axios.get(`https://66abc8ddf009b9d5c730532d.mockapi.io/userlist/${params.id}`); // Update to your backend URL
             setUser(response.data);
             setLoading(false);
         } catch (error) {
@@ -39,31 +39,28 @@ function UserView() {
                                     <thead>
                                         <tr>
                                             <th>Id</th>
-                                            <th>Name</th>
-                                            <th>E-Mail</th>
-                                            <th>City</th>
-                                            <th>State</th>
-                                            <th>Country</th>
+                                            <th>Username</th>
+                                            <th>Email</th>
+                                            <th>Phone Number</th>
+                                            <th>Address</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
                                             <th>Id</th>
-                                            <th>Name</th>
-                                            <th>E-mail</th>
-                                            <th>City</th>
-                                            <th>State</th>
-                                            <th>Country</th>
+                                            <th>Username</th>
+                                            <th>Email</th>
+                                            <th>Phone Number</th>
+                                            <th>Address</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
                                         <tr>
                                             <td>{user.id}</td>
-                                            <td>{user.username}</td>
+                                            <td>{user.userName}</td>
                                             <td>{user.email}</td>
-                                            <td>{user.city}</td>
-                                            <td>{user.state}</td>
-                                            <td>{user.country}</td>
+                                            <td>{user.phoneNumber}</td>
+                                            <td>{user.address}</td>
                                         </tr>
                                     </tbody>
                                 </table>

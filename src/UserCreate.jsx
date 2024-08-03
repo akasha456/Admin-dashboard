@@ -9,21 +9,20 @@ function UserCreate() {
 
   const myFormik = useFormik({
     initialValues: {
-      username: "",
+      userName: "",
       email: "",
-      city: "",
-      state: "",
-      country: ""
+      phoneNumber: "",
+      address: ""
     },
     validate: (values) => {
       let errors = {};
 
-      if (!values.username) {
-        errors.username = "Please enter username";
-      } else if (values.username.length < 5) {
-        errors.username = "Name shouldn't be less than 3 letters";
-      } else if (values.username.length > 20) {
-        errors.username = "Name shouldn't be more than 20 letters";
+      if (!values.userName) {
+        errors.userName = "Please enter username";
+      } else if (values.userName.length < 5) {
+        errors.userName = "Name shouldn't be less than 5 letters";
+      } else if (values.userName.length > 20) {
+        errors.userName = "Name shouldn't be more than 20 letters";
       }
 
       if (!values.email) {
@@ -32,16 +31,14 @@ function UserCreate() {
         errors.email = 'Invalid email address';
       }
 
-      if (!values.city) {
-        errors.city = "Please select any one city";
+      if (!values.phoneNumber) {
+        errors.phoneNumber = "Please enter phone number";
+      } else if (!/^\d{10}$/.test(values.phoneNumber)) {
+        errors.phoneNumber = "Phone number should be 10 digits";
       }
 
-      if (!values.state) {
-        errors.state = "Please select any one state";
-      }
-
-      if (!values.country) {
-        errors.country = "Please select any one country";
+      if (!values.address) {
+        errors.address = "Please enter address";
       }
 
       return errors;
@@ -49,15 +46,13 @@ function UserCreate() {
     onSubmit: async (values) => {
       try {
         setLoading(true);
-        await axios.post("https://63a9bccb7d7edb3ae616b639.mockapi.io/users", values);
+        await axios.post("https://66abc8ddf009b9d5c730532d.mockapi.io/userlist", values); // Update the URL if needed
         navigate("/portal/user-list");
       } catch (error) {
         console.log(error);
         alert("Validation failed");
         setLoading(false);
       }
-
-      console.log(values);
     }
   });
 
@@ -66,80 +61,51 @@ function UserCreate() {
       <form onSubmit={myFormik.handleSubmit}>
         <div className='row'>
           <div className="col-lg-6">
-            <label>Name</label>
+            <label>Username</label>
             <input 
-              name='username' 
-              value={myFormik.values.username} 
+              name='userName' 
+              value={myFormik.values.userName} 
               onChange={myFormik.handleChange} 
               type={"text"}
-              className={`form-control ${myFormik.errors.username ? "is-invalid" : ""} `}
+              className={`form-control ${myFormik.errors.userName ? "is-invalid" : ""} `}
             />
-            <span style={{ color: "red" }}>{myFormik.errors.username}</span>
+            <span style={{ color: "red" }}>{myFormik.errors.userName}</span>
           </div>
 
           <div className="col-lg-6">
-            <label>E-Mail</label>
+            <label>Email</label>
             <input 
               name='email' 
               value={myFormik.values.email} 
               onChange={myFormik.handleChange} 
-              type={"mail"}
+              type={"email"}
               className={`form-control ${myFormik.errors.email ? "is-invalid" : ""} `}
             />
             <span style={{ color: "red" }}>{myFormik.errors.email}</span>
           </div>
 
-          <div className='col-lg-4'>
-            <label>City</label>
-            <select 
-              name='city' 
-              value={myFormik.values.city} 
-              onChange={myFormik.handleChange}
-              className={`form-control ${myFormik.errors.city ? "is-invalid" : ""} `}
-            >
-              <option value="">----Select----</option>
-              <option value="CN">Chennai</option>
-              <option value="KN">Kochin</option>
-              <option value="MU">Mumbai</option>
-              <option value="SA">Seattle</option>
-              <option value="MI">Miami</option>
-              <option value="VB">Virginia Beach</option>
-            </select>
-            <span style={{ color: "red" }}>{myFormik.errors.city}</span>
+          <div className="col-lg-6">
+            <label>Phone Number</label>
+            <input 
+              name='phoneNumber' 
+              value={myFormik.values.phoneNumber} 
+              onChange={myFormik.handleChange} 
+              type={"text"}
+              className={`form-control ${myFormik.errors.phoneNumber ? "is-invalid" : ""} `}
+            />
+            <span style={{ color: "red" }}>{myFormik.errors.phoneNumber}</span>
           </div>
 
-          <div className='col-lg-4'>
-            <label>State</label>
-            <select 
-              name='state' 
-              value={myFormik.values.state} 
-              onChange={myFormik.handleChange}
-              className={`form-control ${myFormik.errors.state ? "is-invalid" : ""} `}
-            >
-              <option value="">----Select----</option>
-              <option value="TN">TamilNadu</option>
-              <option value="KL">Kerala</option>
-              <option value="MH">Maharashtra</option>
-              <option value="WA">Washington</option>
-              <option value="FL">Florida</option>
-              <option value="VA">Virginia</option>
-            </select>
-            <span style={{ color: "red" }}>{myFormik.errors.state}</span>
-          </div>
-
-          <div className='col-lg-4'>
-            <label>Country</label>
-            <select 
-              name='country' 
-              value={myFormik.values.country} 
-              onChange={myFormik.handleChange}
-              className={`form-control ${myFormik.errors.country ? "is-invalid" : ""} `}
-            >
-              <option value="">----Select----</option>
-              <option value="IN">India</option>
-              <option value="US">USA</option>
-            </select>
-            <span style={{ color: "red" }}>{myFormik.errors.country}</span>
+          <div className="col-lg-6">
+            <label>Address</label>
+            <input 
+              name='address' 
+              value={myFormik.values.address} 
+              onChange={myFormik.handleChange} 
+              type={"text"}
+              className={`form-control ${myFormik.errors.address ? "is-invalid" : ""} `}
+            />
+            <span style={{ color: "red" }}>{myFormik.errors.address}</span>
           </div>
 
           <div className='col-lg-4 mt-3'>
@@ -152,7 +118,6 @@ function UserCreate() {
           </div>
         </div>
       </form>
-      {/* {JSON.stringify(myFormik.values)} */}
     </div>
   );
 }

@@ -3,28 +3,28 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 function UserView() {
-    const params = useParams();
+    const { email } = useParams(); // Use email from URL params
     const [user, setUser] = useState(null);
     const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
         getUser();
-    }, [params.id]);
+    }, [email]);
 
     const getUser = async () => {
         try {
-            const response = await axios.get(`https://66abc8ddf009b9d5c730532d.mockapi.io/userlist/${params.id}`); // Update to your backend URL
+            const response = await axios.get(`http://localhost:4000/user/${email}`); // Update to your backend URL
             setUser(response.data);
             setLoading(false);
         } catch (error) {
-            console.log(error);
+            console.error('Error fetching user:', error);
             setLoading(false);
         }
     };
 
     return (
         <>
-            <div>UserView - {params.id}</div>
+            <div>UserView - {email}</div>
             <div className="card shadow mb-4">
                 <div className="card-header py-3">
                     <h6 className="m-0 font-weight-bold text-primary">UserView</h6>
@@ -56,7 +56,7 @@ function UserView() {
                                     </tfoot>
                                     <tbody>
                                         <tr>
-                                            <td>{user.id}</td>
+                                            <td>{user.id}</td> {/* Adjust based on your user model */}
                                             <td>{user.userName}</td>
                                             <td>{user.email}</td>
                                             <td>{user.phoneNumber}</td>

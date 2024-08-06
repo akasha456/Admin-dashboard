@@ -12,7 +12,8 @@ function UserCreate() {
       userName: "",
       email: "",
       phoneNumber: "",
-      address: ""
+      address: "",
+      password: "" // Add password field
     },
     validate: (values) => {
       let errors = {};
@@ -41,12 +42,16 @@ function UserCreate() {
         errors.address = "Please enter address";
       }
 
+      if (!values.password) {
+        errors.password = "Please enter password"; // Add password validation
+      }
+
       return errors;
     },
     onSubmit: async (values) => {
       try {
         setLoading(true);
-        await axios.post("https://66abc8ddf009b9d5c730532d.mockapi.io/userlist", values); // Update the URL if needed
+        await axios.post("http://localhost:4000/newuser", values); // Update the URL if needed
         navigate("/portal/user-list");
       } catch (error) {
         console.log(error);
@@ -106,6 +111,18 @@ function UserCreate() {
               className={`form-control ${myFormik.errors.address ? "is-invalid" : ""} `}
             />
             <span style={{ color: "red" }}>{myFormik.errors.address}</span>
+          </div>
+
+          <div className="col-lg-6">
+            <label>Password</label>
+            <input 
+              name='password' 
+              value={myFormik.values.password} 
+              onChange={myFormik.handleChange} 
+              type={"password"}
+              className={`form-control ${myFormik.errors.password ? "is-invalid" : ""} `}
+            />
+            <span style={{ color: "red" }}>{myFormik.errors.password}</span>
           </div>
 
           <div className='col-lg-4 mt-3'>

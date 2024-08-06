@@ -10,28 +10,27 @@ function Userlist() {
 
   useEffect(() => {
     getUsers();
-    console.log("welcome");
   }, []);
 
   const getUsers = async () => {
     try {
-      const users = await axios.get("https://66abc8ddf009b9d5c730532d.mockapi.io/userlist"); // Update to your backend URL
-      setUserList(users.data);
+      const response = await axios.get("http://localhost:4000/user"); // Fetch users from the correct endpoint
+      setUserList(response.data);
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error('Error fetching users:', error);
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (email) => {
     try {
       const confirmDelete = window.confirm("Are you sure you want to delete this user?");
       if (confirmDelete) {
-        await axios.delete(`https://66abc8ddf009b9d5c730532d.mockapi.io/userlist/${id}`); // Update to your backend URL
+        await axios.delete(`http://localhost:4000/api/admin/user/${email}`); // Delete user by email
         getUsers();
       }
     } catch (error) {
-      console.log(error);
+      console.error('Error deleting user:', error);
     }
   };
 
@@ -39,10 +38,6 @@ function Userlist() {
     <>
       <div className="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 className="h3 mb-0 text-gray-800">User List</h1>
-        <Link to="/portal/create-user" className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-          <FontAwesomeIcon icon={faUser} className="creatinguser mr-2" />
-          Create User
-        </Link>
       </div>
 
       <div className="card shadow mb-4">
@@ -76,16 +71,16 @@ function Userlist() {
                   </tfoot>
                   <tbody>
                     {userList.map((user) => (
-                      <tr key={user.id}>
-                        <td>{user.id}</td>
+                      <tr key={user.email}> {/* Use email as key */}
+                        <td>{user.id}</td> {/* Display user ID if available */}
                         <td>{user.userName}</td>
                         <td>{user.email}</td>
                         <td>{user.phoneNumber}</td>
                         <td>{user.address}</td>
                         <td>
-                          <Link to={`/portal/user-view/${user.id}`} className='btn btn-primary btn-sm mr-1'>View</Link>
-                          <Link to={`/portal/user-edit/${user.id}`} className='btn btn-info btn-sm mr-1'>Edit</Link>
-                          <button onClick={() => handleDelete(user.id)} className='btn btn-danger btn-sm mr-1'>Delete</button>
+                          <Link to={`/portal/user-view/${user.email}`} className='btn btn-primary btn-sm mr-1'>View</Link>
+                          <Link to={`/portal/user-edit/${user.email}`} className='btn btn-info btn-sm mr-1'>Edit</Link>
+                          <button onClick={() => handleDelete(user.email)} className='btn btn-danger btn-sm mr-1'>Delete</button>
                         </td>
                       </tr>
                     ))}

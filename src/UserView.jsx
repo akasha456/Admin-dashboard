@@ -8,16 +8,19 @@ function UserView() {
     const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
-        getUser();
+        if (email) {
+            getUser();
+        }
     }, [email]);
 
     const getUser = async () => {
         try {
-            const response = await axios.get(`http://localhost:4000/user/${email}`); // Update to your backend URL
+            console.log('Fetching user with email:', email);
+            const response = await axios.get(`http://localhost:4000/user/${email}`);
             setUser(response.data);
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching user:', error);
+            console.error('Error fetching user:', error.response ? error.response.data : error.message);
             setLoading(false);
         }
     };
@@ -33,7 +36,7 @@ function UserView() {
                     {isLoading ? (
                         <img src='https://media.giphy.com/media/ZO9b1ntYVJmjZlsWlm/giphy.gif' alt="Loading..." />
                     ) : (
-                        user && (
+                        user ? (
                             <div className="table-responsive">
                                 <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
                                     <thead>
@@ -43,6 +46,7 @@ function UserView() {
                                             <th>Email</th>
                                             <th>Phone Number</th>
                                             <th>Address</th>
+                                            <th>Profile Picture</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -52,19 +56,23 @@ function UserView() {
                                             <th>Email</th>
                                             <th>Phone Number</th>
                                             <th>Address</th>
+                                            <th>Profile Picture</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
                                         <tr>
-                                            <td>{user.id}</td> {/* Adjust based on your user model */}
+                                            <td>{user.id}</td>
                                             <td>{user.userName}</td>
                                             <td>{user.email}</td>
                                             <td>{user.phoneNumber}</td>
                                             <td>{user.address}</td>
+                                            <td>{user.profilePicture ? <img src={user.profilePicture} alt="Profile" width="100" /> : 'No Picture'}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
+                        ) : (
+                            <p>User not found</p>
                         )
                     )}
                 </div>

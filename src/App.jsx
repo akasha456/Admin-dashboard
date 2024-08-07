@@ -3,7 +3,7 @@ import Sidebar from './Sidebar';
 import Topbar from './Topbar';
 import "./sb-admin-2.min.css";
 import Dashboard from './Dashboard';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import Login from './Login';
 import Userlist from './Userlist';
 import Userlist2 from './Userlist2';
@@ -19,8 +19,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Login />} />
+        {/* Redirect from root path to /portal/user-list */}
+        <Route path='/' element={<Navigate to="/portal/user-list" />} />
         <Route path='/portal' element={<Portal />}>
+          <Route index element={<Navigate to="user-list" />} /> {/* Optional if you also want to set /portal default */}
           <Route path='dashboard' element={<Dashboard />} />
           <Route path='user-list' element={<Userlist />} />
           <Route path='user-list2' element={<Userlist2 />} />

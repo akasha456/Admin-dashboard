@@ -4,24 +4,39 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 function UserEdit() {
-  const params = useParams();
+  const params = useParams(); // Access parameters from URL
   const [isLoading, setLoading] = useState(false);
+  const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getUserData();
-  }, []);
+    console.log('Params:', params);
 
+    if (params.id) { // Use params.id instead of params.email
+      getUserData();
+    } else {
+      console.error('No ID parameter found');
+    }
+  }, [params.id]);
+
+  // Function to fetch user data based on ID
   const getUserData = async () => {
     try {
-      const user = await axios.get(`https://66abc8ddf009b9d5c730532d.mockapi.io/userlist/${params.id}`); // Update to your backend URL
+      if (!params.id) {
+        throw new Error('ID parameter is missing');
+      }
+
+      const user = await axios.get(`http://localhost:4000/user/${params.id}`); // Fetch user by ID
       myFormik.setValues(user.data);
+      setUserId(user.data._id); // Set user ID
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error('Error fetching user data:', error);
+      setLoading(false);
     }
   };
 
+  // Formik configuration
   const myFormik = useFormik({
     initialValues: {
       userName: "",
@@ -60,13 +75,14 @@ function UserEdit() {
     },
 
     onSubmit: async (values) => {
+      console.log('Submitting form with values:', values); // Debug line
       try {
         setLoading(true);
-        await axios.put(`https://66abc8ddf009b9d5c730532d.mockapi.io/userlist/${params.id}`, values); // Update to your backend URL
+        await axios.put(`http://localhost:4000/user/${userId}`, values); // Update user by ID
         setLoading(false);
         navigate("/portal/user-list");
       } catch (error) {
-        console.log(error);
+        console.log('Error updating user:', error); // Show error in frontend console
         setLoading(false);
       }
     }
@@ -74,7 +90,7 @@ function UserEdit() {
 
   return (
     <>
-      <h3>UserEdit - Id: {params.id}</h3>
+      <h3>UserEdit - ID: {params.id}</h3>
       <div className='container'>
         <form onSubmit={myFormik.handleSubmit}>
           <div className='row'>
@@ -84,7 +100,7 @@ function UserEdit() {
                 name='userName'
                 value={myFormik.values.userName}
                 onChange={myFormik.handleChange}
-                type={"text"}
+                type="text"
                 className={`form-control ${myFormik.errors.userName ? "is-invalid" : ""}`}
               />
               <span style={{ color: "red" }}>{myFormik.errors.userName}</span>
@@ -96,8 +112,9 @@ function UserEdit() {
                 name='email'
                 value={myFormik.values.email}
                 onChange={myFormik.handleChange}
-                type={"email"}
+                type="email"
                 className={`form-control ${myFormik.errors.email ? "is-invalid" : ""}`}
+                disabled
               />
               <span style={{ color: "red" }}>{myFormik.errors.email}</span>
             </div>
@@ -108,7 +125,7 @@ function UserEdit() {
                 name='phoneNumber'
                 value={myFormik.values.phoneNumber}
                 onChange={myFormik.handleChange}
-                type={"text"}
+                type="text"
                 className={`form-control ${myFormik.errors.phoneNumber ? "is-invalid" : ""}`}
               />
               <span style={{ color: "red" }}>{myFormik.errors.phoneNumber}</span>
@@ -120,7 +137,7 @@ function UserEdit() {
                 name='address'
                 value={myFormik.values.address}
                 onChange={myFormik.handleChange}
-                type={"text"}
+                type="text"
                 className={`form-control ${myFormik.errors.address ? "is-invalid" : ""}`}
               />
               <span style={{ color: "red" }}>{myFormik.errors.address}</span>

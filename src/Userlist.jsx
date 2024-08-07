@@ -51,7 +51,7 @@ function Userlist() {
                 <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
                   <thead>
                     <tr>
-                      <th>Id</th>
+                      
                       <th>Username</th>
                       <th>Email</th>
                       <th>Phone Number</th>
@@ -61,7 +61,7 @@ function Userlist() {
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>Id</th>
+                      
                       <th>Username</th>
                       <th>Email</th>
                       <th>Phone Number</th>
@@ -72,13 +72,13 @@ function Userlist() {
                   <tbody>
                     {userList.map((user) => (
                       <tr key={user.email}> {/* Use email as key */}
-                        <td>{user.id}</td> {/* Display user ID if available */}
+                         {/* Display user ID if available */}
                         <td>{user.userName}</td>
                         <td>{user.email}</td>
                         <td>{user.phoneNumber}</td>
                         <td>{user.address}</td>
                         <td>
-                          <Link to={`/portal/user-view/${user.email}`} className='btn btn-primary btn-sm mr-1'>View</Link>
+                          
                           <Link to={`/portal/user-edit/${user.email}`} className='btn btn-info btn-sm mr-1'>Edit</Link>
                           <button onClick={() => handleDelete(user.email)} className='btn btn-danger btn-sm mr-1'>Delete</button>
                         </td>

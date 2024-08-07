@@ -64,7 +64,7 @@ function UserCreate() {
     onSubmit: async (values) => {
       try {
         setLoading(true);       
-        await axios.post("https://66abc8ddf009b9d5c730532d.mockapi.io/events", values);
+        await axios.post("http://localhost:4000/events", values); // Update to your backend URL
         navigate("/portal/user-list2");
       } catch (error) {
         console.log(error);

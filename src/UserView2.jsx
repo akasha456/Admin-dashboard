@@ -13,7 +13,7 @@ function EventView() {
 
     const getEventDetails = async () => {
         try {
-            const response = await axios.get(`https://66abc8ddf009b9d5c730532d.mockapi.io/events/${params.id}`);
+            const response = await axios.get(`http://localhost:4000/events/${params.id}`);
             const data = response.data;
 
             // Convert endDate from Unix timestamp to a readable format
@@ -46,7 +46,7 @@ function EventView() {
                                 <table className="table table-bordered" width="100%" cellSpacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Id</th>
+                                            
                                             <th>Event Name</th>
                                             <th>Description</th>
                                             <th>Start Date</th>
@@ -59,7 +59,7 @@ function EventView() {
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th>Id</th>
+                                            
                                             <th>Event Name</th>
                                             <th>Description</th>
                                             <th>Start Date</th>
@@ -72,7 +72,7 @@ function EventView() {
                                     </tfoot>
                                     <tbody>
                                         <tr>
-                                            <td>{eventDetails.id}</td>
+                                            
                                             <td>{eventDetails.eventName}</td>
                                             <td>{eventDetails.description}</td>
                                             <td>{eventDetails.startDate}</td>

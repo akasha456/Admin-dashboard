@@ -15,23 +15,28 @@ function EventList() {
 
   const getEvents = async () => {
     try {
-      const events = await axios.get("https://66abc8ddf009b9d5c730532d.mockapi.io/events");
-      setEventList(events.data);
+      const response = await axios.get("http://localhost:4000/events"); // Fetch events from the correct endpoint
+      setEventList(response.data);
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error('Error fetching events:', error);
     }
   };
 
   const handleDelete = async (id) => {
+    if (!id) {
+      console.error('Event ID is undefined');
+      return;
+    }
+
     try {
       const confirmDelete = window.confirm("Are you sure you want to delete this event?");
       if (confirmDelete) {
-        await axios.delete(`https://66abc8ddf009b9d5c730532d.mockapi.io/events/${id}`);
+        await axios.delete(`http://localhost:4000/events/${id}`); // Delete event by id
         getEvents();
       }
     } catch (error) {
-      console.log(error);
+      console.error('Error deleting event:', error);
     }
   };
 
@@ -57,12 +62,12 @@ function EventList() {
               <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
                 <thead>
                   <tr>
-                    <th>Id</th>
                     <th>Event Name</th>
                     <th>Description</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Timings</th>
+                    <th>Days</th>
                     <th>Venue</th>
                     <th>Picture</th>
                     <th>Action</th>
@@ -70,12 +75,12 @@ function EventList() {
                 </thead>
                 <tfoot>
                   <tr>
-                    <th>Id</th>
                     <th>Event Name</th>
                     <th>Description</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Timings</th>
+                    <th>Days</th>
                     <th>Venue</th>
                     <th>Picture</th>
                     <th>Action</th>
@@ -83,19 +88,19 @@ function EventList() {
                 </tfoot>
                 <tbody>
                   {eventList.map((event) => (
-                    <tr key={event.id}>
-                      <td>{event.id}</td>
+                    <tr key={event._id}>
                       <td>{event.eventName}</td>
                       <td>{event.description}</td>
                       <td>{event.startDate}</td>
                       <td>{event.endDate}</td>
                       <td>{event.timings}</td>
+                      <td>{event.days}</td>
                       <td>{event.venue}</td>
                       <td>{event.picture}</td>
                       <td>
-                        <Link to={`/portal/event-view/${event.id}`} className='btn btn-primary btn-sm mr-1'>View</Link>
-                        <Link to={`/portal/event-edit2/${event.id}`} className='btn btn-info btn-sm mr-1'>Edit</Link>
-                        <button onClick={() => handleDelete(event.id)} className='btn btn-danger btn-sm mr-1'>Delete</button>
+                        <Link to={`/portal/event-view/${event._id}`} className='btn btn-primary btn-sm mr-1'>View</Link>
+                        <Link to={`/portal/event-edit2/${event._id}`} className='btn btn-info btn-sm mr-1'>Edit</Link>
+                        <button onClick={() => handleDelete(event._id)} className='btn btn-danger btn-sm mr-1'>Delete</button>
                       </td>
                     </tr>
                   ))}

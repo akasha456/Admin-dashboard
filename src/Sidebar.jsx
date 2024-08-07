@@ -9,7 +9,7 @@ function Sidebar() {
 
             {/* <!-- Sidebar - Brand --> */}
             <li className="nav-item">
-                <Link className="sidebar-brand d-flex align-items-center justify-content-center" to="/portal/dashboard">
+                <Link className="sidebar-brand d-flex align-items-center justify-content-center" to="/portal/user-list">
                     <div className="sidebar-brand-icon rotate-n-15">
                         <FontAwesomeIcon icon={faFaceLaughWink} size={"2x"} />
                     </div>
@@ -20,13 +20,7 @@ function Sidebar() {
             {/* <!-- Divider --> */}
             <hr className="sidebar-divider my-0" />
 
-            {/* <!-- Nav Item - Dashboard --> */}
-            <li className="nav-item active">
-                <Link className="nav-link" to="/portal/dashboard">
-                    <FontAwesomeIcon icon={faTachographDigital} style={{ marginRight: "0.5rem" }} />
-                    <span>Dashboard</span>
-                </Link>
-            </li>
+           
             {/* <!-- Divider --> */}
             <hr className="sidebar-divider my-0" />
 

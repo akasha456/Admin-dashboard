@@ -3,27 +3,43 @@ import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-function UserEdit() {
-    const params = useParams();
+function EventEdit() {
+    const { id } = useParams(); // Access parameters from URL
     const [isLoading, setLoading] = useState(false);
+    const [eventId, setEventId] = useState(null); // Initialize state for event ID
     const navigate = useNavigate();
 
     useEffect(() => {
-        getEventData();
-    }, []);
+        console.log('Params:', id);
 
-    const getEventData = async () => {
+        if (id) {
+            fetchEventData();
+        } else {
+            console.error('No ID parameter found');
+        }
+    }, [id]);
+
+    // Function to fetch event data based on ID
+    const fetchEventData = async () => {
+        setLoading(true);
         try {
-            const response = await axios.get(`https://66abc8ddf009b9d5c730532d.mockapi.io/events/${params.id}`);
-            myFormik.setValues(response.data);
-            setLoading(false);
+            console.log('Event ID:', id); // Debug line to verify ID
+            if (!id) {
+                throw new Error('Event ID is undefined');
+            }
+            const response = await axios.get(`http://localhost:4000/events/${id}`);
+            formik.setValues(response.data);
+            setEventId(response.data._id);
         } catch (error) {
-            console.error(error);
+            console.error('Error fetching event data:', error);
+        } finally {
             setLoading(false);
         }
     };
+    
 
-    const myFormik = useFormik({
+    // Formik configuration
+    const formik = useFormik({
         initialValues: {
             eventName: "",
             description: "",
@@ -74,28 +90,28 @@ function UserEdit() {
             return errors;
         },
         onSubmit: async (values) => {
+            console.log('Submitting form with values:', values); // Debug line
             try {
                 setLoading(true);
-                
-                // Convert endDate to Unix timestamp
+
                 const endDateTimestamp = Math.floor(new Date(values.endDate).getTime() / 1000);
 
                 const updatedEvent = {
                     eventName: values.eventName,
                     description: values.description,
-                    startDate: values.startDate, // Ensure this is in the correct format
+                    startDate: values.startDate,
                     endDate: endDateTimestamp,
                     timings: values.timings,
-                    days: values.days,
+                    days: values.days, // Convert days to array
                     venue: values.venue,
                     picture: values.picture
                 };
 
-                await axios.put(`https://66abc8ddf009b9d5c730532d.mockapi.io/events/${params.id}`, updatedEvent);
-                navigate("/portal/user-list2");
+                await axios.put(`http://localhost:4000/events/${eventId}`, updatedEvent); // Use eventId for update
+                navigate('/portal/user-list2');
             } catch (error) {
-                console.error(error);
-                alert("Update failed");
+                console.error('Error updating event:', error);
+                alert('Update failed');
             } finally {
                 setLoading(false);
             }
@@ -104,112 +120,112 @@ function UserEdit() {
 
     return (
         <>
-            <h3>Event Edit - Id: {params.id} </h3>
+            <h3>EventEdit - ID: {id}</h3>
             <div className='container'>
-                <form onSubmit={myFormik.handleSubmit}>
+                <form onSubmit={formik.handleSubmit}>
                     <div className='row'>
                         <div className="col-lg-6">
                             <label>Event Name</label>
-                            <input 
-                                name='eventName' 
-                                value={myFormik.values.eventName} 
-                                onChange={myFormik.handleChange} 
+                            <input
+                                name='eventName'
+                                value={formik.values.eventName}
+                                onChange={formik.handleChange}
                                 type="text"
-                                className={`form-control ${myFormik.errors.eventName ? "is-invalid" : ""}`} 
+                                className={`form-control ${formik.errors.eventName ? "is-invalid" : ""}`}
                             />
-                            <span style={{ color: "red" }}>{myFormik.errors.eventName}</span>
+                            <span style={{ color: "red" }}>{formik.errors.eventName}</span>
                         </div>
 
                         <div className="col-lg-6">
                             <label>Description</label>
-                            <input 
-                                name='description' 
-                                value={myFormik.values.description} 
-                                onChange={myFormik.handleChange} 
+                            <input
+                                name='description'
+                                value={formik.values.description}
+                                onChange={formik.handleChange}
                                 type="text"
-                                className={`form-control ${myFormik.errors.description ? "is-invalid" : ""}`} 
+                                className={`form-control ${formik.errors.description ? "is-invalid" : ""}`}
                             />
-                            <span style={{ color: "red" }}>{myFormik.errors.description}</span>
+                            <span style={{ color: "red" }}>{formik.errors.description}</span>
                         </div>
 
                         <div className='col-lg-4'>
                             <label>Start Date</label>
                             <input
                                 name='startDate'
-                                type='date'
-                                value={myFormik.values.startDate}
-                                onChange={myFormik.handleChange}
-                                className={`form-control ${myFormik.errors.startDate ? "is-invalid" : ""}`}
+                                type='text'
+                                value={formik.values.startDate}
+                                onChange={formik.handleChange}
+                                className={`form-control ${formik.errors.startDate ? "is-invalid" : ""}`}
                             />
-                            <span style={{ color: "red" }}>{myFormik.errors.startDate}</span>
+                            <span style={{ color: "red" }}>{formik.errors.startDate}</span>
                         </div>
 
                         <div className='col-lg-4'>
                             <label>End Date</label>
                             <input
                                 name='endDate'
-                                type='date'
-                                value={myFormik.values.endDate}
-                                onChange={myFormik.handleChange}
-                                className={`form-control ${myFormik.errors.endDate ? "is-invalid" : ""}`}
+                                type='text'
+                                value={formik.values.endDate}
+                                onChange={formik.handleChange}
+                                className={`form-control ${formik.errors.endDate ? "is-invalid" : ""}`}
                             />
-                            <span style={{ color: "red" }}>{myFormik.errors.endDate}</span>
+                            <span style={{ color: "red" }}>{formik.errors.endDate}</span>
                         </div>
 
                         <div className='col-lg-4'>
                             <label>Timings</label>
-                            <input 
-                                name='timings' 
-                                value={myFormik.values.timings} 
-                                onChange={myFormik.handleChange}
+                            <input
+                                name='timings'
+                                value={formik.values.timings}
+                                onChange={formik.handleChange}
                                 type="text"
-                                className={`form-control ${myFormik.errors.timings ? "is-invalid" : ""}`} 
+                                className={`form-control ${formik.errors.timings ? "is-invalid" : ""}`}
                             />
-                            <span style={{ color: "red" }}>{myFormik.errors.timings}</span>
+                            <span style={{ color: "red" }}>{formik.errors.timings}</span>
                         </div>
 
                         <div className='col-lg-4'>
                             <label>Days</label>
-                            <input 
-                                name='days' 
-                                value={myFormik.values.days} 
-                                onChange={myFormik.handleChange}
+                            <input
+                                name='days'
+                                value={formik.values.days}
+                                onChange={formik.handleChange}
                                 type="text"
-                                className={`form-control ${myFormik.errors.days ? "is-invalid" : ""}`} 
+                                className={`form-control ${formik.errors.days ? "is-invalid" : ""}`}
                             />
-                            <span style={{ color: "red" }}>{myFormik.errors.days}</span>
+                            <span style={{ color: "red" }}>{formik.errors.days}</span>
                         </div>
 
                         <div className='col-lg-4'>
                             <label>Venue</label>
-                            <input 
-                                name='venue' 
-                                value={myFormik.values.venue} 
-                                onChange={myFormik.handleChange}
+                            <input
+                                name='venue'
+                                value={formik.values.venue}
+                                onChange={formik.handleChange}
                                 type="text"
-                                className={`form-control ${myFormik.errors.venue ? "is-invalid" : ""}`} 
+                                className={`form-control ${formik.errors.venue ? "is-invalid" : ""}`}
                             />
-                            <span style={{ color: "red" }}>{myFormik.errors.venue}</span>
+                            <span style={{ color: "red" }}>{formik.errors.venue}</span>
                         </div>
 
                         <div className='col-lg-4'>
                             <label>Picture URL</label>
-                            <input 
-                                name='picture' 
-                                value={myFormik.values.picture} 
-                                onChange={myFormik.handleChange}
+                            <input
+                                name='picture'
+                                value={formik.values.picture}
+                                onChange={formik.handleChange}
                                 type="text"
-                                className={`form-control ${myFormik.errors.picture ? "is-invalid" : ""}`} 
+                                className={`form-control ${formik.errors.picture ? "is-invalid" : ""}`}
                             />
-                            <span style={{ color: "red" }}>{myFormik.errors.picture}</span>
+                            <span style={{ color: "red" }}>{formik.errors.picture}</span>
                         </div>
 
                         <div className='col-lg-4 mt-3'>
-                            <input 
-                                disabled={isLoading} 
-                                type="submit" 
-                                value={isLoading ? "Updating..." : "Update"} 
-                                className='btn btn-primary' 
+                            <input
+                                disabled={isLoading}
+                                type="submit"
+                                value={isLoading ? "Updating..." : "Update"}
+                                className='btn btn-primary'
                             />
                         </div>
                     </div>
@@ -219,4 +235,4 @@ function UserEdit() {
     );
 }
 
-export default UserEdit;
+export default EventEdit;

@@ -114,7 +114,7 @@ function UserEdit() {
                 onChange={myFormik.handleChange}
                 type="email"
                 className={`form-control ${myFormik.errors.email ? "is-invalid" : ""}`}
-                disabled
+                
               />
               <span style={{ color: "red" }}>{myFormik.errors.email}</span>
             </div>

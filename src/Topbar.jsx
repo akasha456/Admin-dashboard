@@ -39,12 +39,6 @@ function Topbar() {
 
                 {/* Nav Item - User Information */}
                 <li className="nav-item dropdown no-arrow">
-                    <Link className="nav-link dropdown-toggle" to="/" id="userDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span className="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                        <FontAwesomeIcon icon={faCircleUser} size={"xl"} />
-                    </Link>
-                    {/* Dropdown - User Information */}
                     <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                         aria-labelledby="userDropdown">
                         <a className="dropdown-item" href="#">

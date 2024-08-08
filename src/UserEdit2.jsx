@@ -83,8 +83,6 @@ function EventEdit() {
 
             if (!values.picture) {
                 errors.picture = "Picture URL is required";
-            } else if (!/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/i.test(values.picture)) {
-                errors.picture = "Invalid picture URL";
             }
 
             return errors;
